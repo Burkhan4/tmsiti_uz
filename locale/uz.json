@@ -1,0 +1,39 @@
+{
+  "menu": {
+    "institute": "INSTITUT",
+    "institute_submenu": {
+      "about": "INSTITUT HAQIDA",
+      "management": "RAHBARIYAT",
+      "structure": "TASHKILIY TUZILMA",
+      "departments": "TARKIBIY BO'LINMALAR",
+      "vacancies": "VAKANSIYALAR"
+    },
+    "documents": "ME'YORIY HUJJATLAR",
+    "documents_submenu": {
+      "laws": "QONUN QAROR VA FARMONLAR",
+      "urban": "SHAHARSOZLIK NORMALARI VA QOIDALARI",
+      "standards": "STANDARTLAR",
+      "regulations": "QURILISH REGLAMENTLARI",
+      "resource_norms": "SMETA-RESURS NORMALARI",
+      "references": "MA'LUMOTNOMA",
+      "technical_regulations": "TEXNIK REGLAMENTLAR"
+    },
+    "activity": "FAOLIYAT",
+    "activity_submenu": {
+      "classifier": "KLASSIFIKATOR",
+      "certification": "MENEJMENT TIZIMLARINI SERTIFIKATLASHTIRISH ORGANI",
+      "laboratory": "LABORATORIYA"
+    },
+    "news": "XABARLAR",
+    "news_submenu": {
+      "announcements": "E'LONLAR",
+      "news": "YANGILIK",
+      "meetings": "UCHRASHUVLAR",
+      "events": "OMMAVIY TADBIRLAR",
+      "cooperation": "XALQARO HAMKORLIK",
+      "seminars": "SEMINAR-KO'RGAZMALAR",
+      "anticorruption": "KORRUPSIYAGA QARSHI KURASHISH"
+    },
+    "contact": "BOG'LANISH"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "menu": {
+    "institute": "ИНСТИТУТ",
+    "institute_submenu": {
+      "about": "ОБ ИНСТИТУТЕ",
+      "management": "РУКОВОДСТВО",
+      "structure": "ОРГАНИЗАЦИОННАЯ СТРУКТУРА",
+      "departments": "СТРУКТУРНЫЕ ПОДРАЗДЕЛЕНИЯ",
+      "vacancies": "ВАКАНСИИ"
+    },
+    "documents": "НОРМАТИВНЫЕ ДОКУМЕНТЫ",
+    "documents_submenu": {
+      "laws": "ЗАКОНЫ, УКАЗЫ И ПОСТАНОВЛЕНИЯ",
+      "urban": "ГРАДОСТРОИТЕЛЬНЫЕ НОРМЫ И ПРАВИЛА",
+      "standards": "СТАНДАРТЫ",
+      "regulations": "СТРОИТЕЛЬНЫЕ РЕГЛАМЕНТЫ",
+      "resource_norms": "СМЕТНО-РЕСУРСНЫЕ НОРМЫ",
+      "references": "СПРАВОЧНИК",
+      "technical_regulations": "ТЕХНИЧЕСКИЕ РЕГЛАМЕНТЫ"
+    },
+    "activity": "ДЕЯТЕЛЬНОСТЬ",
+    "activity_submenu": {
+      "classifier": "КЛАССИФИКАТОР",
+      "certification": "ОРГАН ПО СЕРТИФИКАЦИИ СИСТЕМ МЕНЕДЖМЕНТА",
+      "laboratory": "ЛАБОРАТОРИЯ"
+    },
+    "news": "НОВОСТИ",
+    "news_submenu": {
+      "announcements": "ОБЪЯВЛЕНИЯ",
+      "news": "НОВОСТИ",
+      "meetings": "ВСТРЕЧИ",
+      "events": "ПУБЛИЧНЫЕ МЕРОПРИЯТИЯ",
+      "cooperation": "МЕЖДУНАРОДНОЕ СОТРУДНИЧЕСТВО",
+      "seminars": "СЕМИНАРЫ-ВЫСТАВКИ",
+      "anticorruption": "БОРЬБА С КОРРУПЦИЕЙ"
+    },
+    "contact": "КОНТАКТЫ"
+  }
+}
