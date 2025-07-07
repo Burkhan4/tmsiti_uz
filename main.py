@@ -1,10 +1,11 @@
-from fastapi import FastAPI
-from routers import auth, institute, documents
+from fastapi import FastAPI, Depends
+from routers import auth, institute, documents, news, contact
 import sqlite3
 from dotenv import load_dotenv
 import os
 from fastapi_pagination import add_pagination
 from passlib.context import CryptContext
+from dependencies import get_language
 
 # .env faylini yuklash
 load_dotenv()
@@ -16,6 +17,8 @@ app = FastAPI()
 app.include_router(auth.router)
 app.include_router(institute.router)
 app.include_router(documents.router)
+app.include_router(news.router)
+app.include_router(contact.router)
 
 # Pagination qo'shish
 add_pagination(app)
@@ -147,6 +150,42 @@ def init_db():
             pdf_link TEXT NOT NULL
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS announcements (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            date TEXT NOT NULL,
+            link TEXT
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS news (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            date TEXT NOT NULL,
+            image TEXT
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS anticorruption (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            date TEXT NOT NULL,
+            document_link TEXT
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS contacts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            message TEXT NOT NULL,
+            sent_at TEXT NOT NULL
+        )
+    """)
     # Dastlabki admin foydalanuvchisini qo‘shish
     cursor.execute("SELECT * FROM users WHERE username = ?", ("admin",))
     if not cursor.fetchone():
@@ -160,8 +199,8 @@ def init_db():
 
 # Oddiy foydalanuvchi uchun endpoint
 @app.get("/public/info")
-async def public_info():
-    return {"message": "This is a public endpoint accessible to all users"}
+async def public_info(lang: str = Depends(get_language)):
+    return {"message": lang["messages"]["public_info"]}
 
 # Dastur ishga tushganda DB ni tayyorlash
 init_db()

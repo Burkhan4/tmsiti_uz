@@ -1,0 +1,13 @@
+{
+  "tags": {
+    "auth": "Autentifikatsiya",
+    "institute": "Institut",
+    "documents": "Me'yoriy hujjatlar",
+    "news": "Xabarlar",
+    "contact": "Bog‘lanish"
+  },
+  "messages": {
+    "public_info": "Bu barcha foydalanuvchilar uchun ochiq endpoint",
+    "message_sent": "Xabar muvaffaqiyatli yuborildi"
+  }
+}
