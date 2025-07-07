@@ -82,3 +82,4 @@ class VacancyCreate(BaseModel):
 
 class VacancyResponse(VacancyCreate):
     id: int
+    

@@ -58,3 +58,4 @@ class AnticorruptionCreate(BaseModel):
 
 class AnticorruptionResponse(AnticorruptionCreate):
     id: int
+    

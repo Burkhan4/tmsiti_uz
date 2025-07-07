@@ -19,3 +19,4 @@ class Anticorruption(BaseModel):
     content: str
     date: date
     document_link: Optional[HttpUrl] = None
+    

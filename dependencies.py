@@ -88,3 +88,4 @@ def get_language(lang: str = "uz"):
     except FileNotFoundError:
         with open("locales/uz.json", "r", encoding="utf-8") as f:
             return json.load(f)
+        
