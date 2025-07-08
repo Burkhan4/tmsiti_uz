@@ -1,57 +1,65 @@
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, EmailStr
+from fastapi import APIRouter, Depends, HTTPException, Form, File, UploadFile
+from schemas.contact import ContactCreate, ContactResponse
 import sqlite3
-from datetime import datetime
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+from dependencies import get_db
+from aiogram import Bot
+from aiogram.enums import ParseMode
 import os
 from dotenv import load_dotenv
-from dependencies import get_db, get_language
+from utils.file_upload import save_file
 
 load_dotenv()
 
 router = APIRouter(prefix="/contact", tags=["contact"])
 
-class ContactCreate(BaseModel):
-    name: str
-    email: EmailStr
-    message: str
-
-@router.post("/send")
-async def send_contact_message(contact: ContactCreate, db: sqlite3.Connection = Depends(get_db), lang: dict = Depends(get_language)):
-    # Ma'lumotlar bazasiga saqlash
+@router.post("/send", response_model=ContactResponse)
+async def send_contact_message(
+    name: str = Form(...),
+    email: str = Form(...),
+    subject: str = Form(...),
+    message: str = Form(...),
+    file: UploadFile = File(None),
+    db: sqlite3.Connection = Depends(get_db)
+):
+    file_path = await save_file(file, ["pdf"], "uploads/contact") if file else None
     cursor = db.cursor()
-    sent_at = datetime.utcnow().isoformat()
     cursor.execute(
-        "INSERT INTO contacts (name, email, message, sent_at) VALUES (?, ?, ?, ?)",
-        (contact.name, contact.email, contact.message, sent_at)
+        "INSERT INTO contacts (name, email, subject, message, file) VALUES (?, ?, ?, ?, ?)",
+        (name, email, subject, message, file_path)
     )
     db.commit()
-
-    # Email yuborish
-    smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-    smtp_port = int(os.getenv("SMTP_PORT", 587))
-    smtp_username = os.getenv("SMTP_USERNAME")
-    smtp_password = os.getenv("SMTP_PASSWORD")
-    recipient_email = os.getenv("RECIPIENT_EMAIL")
-
-    if not all([smtp_username, smtp_password, recipient_email]):
-        raise HTTPException(status_code=500, detail="SMTP configuration is missing")
-
-    msg = MIMEMultipart()
-    msg["From"] = smtp_username
-    msg["To"] = recipient_email
-    msg["Subject"] = f"New Contact Message from {contact.name}"
-    body = f"Name: {contact.name}\nEmail: {contact.email}\nMessage: {contact.message}\nSent at: {sent_at}"
-    msg.attach(MIMEText(body, "plain"))
-
+    
+    bot_token = os.getenv("BOT_TOKEN")
+    telegram_user_id = os.getenv("TELEGRAM_USER_ID")
+    
+    if not bot_token or not telegram_user_id:
+        raise HTTPException(status_code=500, detail="Telegram bot sozlamalari topilmadi")
+    
+    bot = Bot(token=bot_token)
     try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_username, smtp_password)
-            server.send_message(msg)
+        message_text = (
+            f"Yangi xabar keldi!\n"
+            f"Ism: {name}\n"
+            f"Email: {email}\n"
+            f"Mavzu: {subject}\n"
+            f"Xabar: {message}\n"
+            f"Fayl: {file_path if file_path else 'Yo‘q'}"
+        )
+        # Markdown o'rniga oddiy matn sifatida yuborish
+        await bot.send_message(
+            chat_id=telegram_user_id,
+            text=message_text
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Telegram bot xatosi: {str(e)}")
+    finally:
+        await bot.session.close()
+    
+    return {"id": cursor.lastrowid, "name": name, "email": email, "subject": subject, "message": message, "file": file_path}
 
-    return {"message": lang["messages"]["message_sent"]}
+@router.get("/messages", response_model=list[ContactResponse])
+async def get_contact_messages(db: sqlite3.Connection = Depends(get_db)):
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM contacts")
+    items = cursor.fetchall()
+    return [{"id": item["id"], "name": item["name"], "email": item["email"], "subject": item["subject"], "message": item["message"], "file": item["file"]} for item in items]

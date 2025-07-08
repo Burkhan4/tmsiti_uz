@@ -1,0 +1,47 @@
+{
+  "menu": {
+    "institute": {
+      "title": "INSTITUTE",
+      "submenus": {
+        "about": "About Institute",
+        "management": "Management",
+        "structure": "Organizational Structure",
+        "departments": "Departments",
+        "vacancies": "Vacancies"
+      }
+    },
+    "regulatory_documents": {
+      "title": "REGULATORY DOCUMENTS",
+      "submenus": {
+        "laws": "Laws, Decrees, and Resolutions",
+        "urban_norms": "Urban Planning Norms and Rules",
+        "standards": "Standards",
+        "regulations": "Construction Regulations",
+        "resource_norms": "Cost-Resource Norms",
+        "technical_regulations": "Technical Regulations",
+        "reference": "Reference Materials"
+      }
+    },
+    "activities": {
+      "title": "ACTIVITIES",
+      "submenus": {
+        "classifier": "Classifier",
+        "certification": "Management Systems Certification Body",
+        "laboratory": "Laboratory"
+      }
+    },
+    "news": {
+      "title": "NEWS",
+      "submenus": {
+        "announcements": "Announcements",
+        "news": "News",
+        "meetings": "Meetings",
+        "public_events": "Public Events",
+        "international_cooperation": "International Cooperation",
+        "seminars_exhibitions": "Seminars and Exhibitions",
+        "anticorruption": "Anti-Corruption"
+      }
+    },
+    "contact": "CONTACT"
+  }
+}

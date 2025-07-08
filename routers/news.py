@@ -18,17 +18,19 @@ async def create_announcement(
     title: str = Form(...),
     content: str = Form(...),
     date: str = Form(...),
+    image: UploadFile = File(None),
     link: str = Form(None),
     current_user: dict = Depends(get_current_admin),
     db: sqlite3.Connection = Depends(get_db)
 ):
+    image_path = await save_file(image, ["jpg", "png"], "uploads/announcements") if image else None
     cursor = db.cursor()
     cursor.execute(
-        "INSERT INTO announcements (title, content, date, link) VALUES (?, ?, ?, ?)",
-        (title, content, date, link)
+        "INSERT INTO announcements (title, content, date, image, link) VALUES (?, ?, ?, ?, ?)",
+        (title, content, date, image_path, link)
     )
     db.commit()
-    return {"id": cursor.lastrowid, "title": title, "content": content, "date": date, "link": link}
+    return {"id": cursor.lastrowid, "title": title, "content": content, "date": date, "image": image_path, "link": link}
 
 @router.get("/announcements", response_model=List[AnnouncementResponse])
 async def get_announcements(db: sqlite3.Connection = Depends(get_db)):
@@ -134,24 +136,53 @@ async def delete_news(
     db.commit()
     return {"message": "News deleted"}
 
+@router.get("/news/{id}", response_model=NewsResponse)
+async def get_news_detail(id: int, db: sqlite3.Connection = Depends(get_db)):
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM news WHERE id = ?", (id,))
+    item = cursor.fetchone()
+    if not item:
+        raise HTTPException(status_code=404, detail="News not found")
+    return {"id": item["id"], "title": item["title"], "content": item["content"], "date": item["date"], "image": item["image"]}
+
+@router.get("/related-news", response_model=List[NewsResponse])
+async def get_related_news(db: sqlite3.Connection = Depends(get_db)):
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM news ORDER BY date DESC LIMIT 5")
+    items = cursor.fetchall()
+    return [{"id": item["id"], "title": item["title"], "content": item["content"], "date": item["date"], "image": item["image"]} for item in items]
+
 # KORRUPSIYAGA QARSHI KURASHISH
 @router.post("/anticorruption", response_model=AnticorruptionResponse)
 async def create_anticorruption(
     title: str = Form(...),
     content: str = Form(...),
+    minister_message: str = Form(None),
     date: str = Form(...),
+    image: UploadFile = File(None),
     document_link: UploadFile = File(None),
+    telegram_link: str = Form(None),
     current_user: dict = Depends(get_current_admin),
     db: sqlite3.Connection = Depends(get_db)
 ):
+    image_path = await save_file(image, ["jpg", "png"], "uploads/anticorruption") if image else None
     doc_path = await save_file(document_link, ["pdf"], "uploads/anticorruption") if document_link else None
     cursor = db.cursor()
     cursor.execute(
-        "INSERT INTO anticorruption (title, content, date, document_link) VALUES (?, ?, ?, ?)",
-        (title, content, date, doc_path)
+        "INSERT INTO anticorruption (title, content, minister_message, date, image, document_link, telegram_link) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (title, content, minister_message, date, image_path, doc_path, telegram_link)
     )
     db.commit()
-    return {"id": cursor.lastrowid, "title": title, "content": content, "date": date, "document_link": doc_path}
+    return {
+        "id": cursor.lastrowid,
+        "title": title,
+        "content": content,
+        "minister_message": minister_message,
+        "date": date,
+        "image": image_path,
+        "document_link": doc_path,
+        "telegram_link": telegram_link
+    }
 
 @router.get("/anticorruption", response_model=List[AnticorruptionResponse])
 async def get_anticorruption(db: sqlite3.Connection = Depends(get_db)):
