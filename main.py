@@ -129,7 +129,7 @@ def init_db():
         """)
         # Default admin
         cursor.execute("INSERT OR IGNORE INTO users (username, password, role) VALUES (?, ?, ?)",
-                      ("admin", "$2b$12$8Q4u8k3b3z3X3Y3Z3W3z3u3V3T3R3Q3P3N3M3L3K3J3H3G3F3E3D3", "admin"))
+                      ("admin", "$2b$12$cuzkTEoOTLv9RI45wvJWOu4zmyZl78Jpv8R0yI/os8NdV557U9rLi", "admin"))
         db.commit()
 
 def update_db_schema():
